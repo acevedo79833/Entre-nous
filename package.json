@@ -1,0 +1,8 @@
+{
+  "name": "entre-nous",
+  "private": true,
+  "dependencies": {
+    "esbuild": "^0.28.2",
+    "firebase-admin": "^12.7.0"
+  }
+}
