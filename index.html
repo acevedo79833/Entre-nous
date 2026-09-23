@@ -235,6 +235,28 @@ label{display:block;font-size:13px;font-weight:600;margin:12px 0 6px}
 .viewer .vbar button{border:0;border-radius:999px;padding:10px 16px;font-weight:700;background:rgba(255,255,255,.14);color:#fff}
 .viewer .vbar button.main{background:#fff;color:#141C2B}
 
+/* ---------- frase de estado ---------- */
+.chips-sug{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips-sug button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.chips-sug button:hover{background:var(--bubble)}
+.mystatus{font-size:13px;color:var(--muted);margin-top:2px}
+.count{font-size:12px;color:var(--muted);text-align:right;margin-top:4px}
+
+/* ---------- búsqueda en el chat ---------- */
+.searchbar{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:var(--panel)}
+.searchbar input{flex:1;border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:9px 14px}
+.searchbar .hits{font-size:13px;color:var(--muted);white-space:nowrap}
+.searchbar .iconbtn{width:36px;height:36px}
+.row.hit .bub{outline:2px solid var(--accent)}
+.badge.mute{background:var(--muted)!important;color:#fff!important}
+.pinico{font-size:12px;opacity:.6;margin-left:4px}
+.blocked-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.blocked-row b{flex:1;font-size:14.5px}
+.blocked-row button{border:0;background:var(--bubble);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13.5px}
+.theme-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.theme-opts button{border:1px solid var(--line);background:var(--bg);border-radius:12px;padding:12px 6px;font-weight:600;font-size:14px}
+.theme-opts button[aria-pressed="true"]{border-color:var(--brand);background:var(--bubble);color:var(--ink)}
+
 /* ---------- cifrado ---------- */
 .e2e{align-self:center;max-width:430px;text-align:center;font-size:12.5px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:6px 0 4px}
 .txt.locked{font-style:italic;opacity:.75}
@@ -370,6 +392,69 @@ label{display:block;font-size:13px;font-weight:600;margin:12px 0 6px}
   </div>
 </div>
 
+<!-- Frase de estado -->
+<div class="sheet" id="statusSheet" role="dialog" aria-modal="true" aria-labelledby="stTitle">
+  <div class="card">
+    <h3 id="stTitle">Tu frase de estado</h3>
+    <p class="body">La ven las personas con las que chateas. No escribas datos reservados de tus casos.</p>
+    <input class="inp" id="stInput" maxlength="80" placeholder="Disponible">
+    <div class="count" id="stCount">0/80</div>
+    <div class="chips-sug" id="stSug"></div>
+    <div class="actions">
+      <button class="ghost" id="stDel" type="button">Quitar</button>
+      <button class="ghost" id="stCancel" type="button">Cancelar</button>
+      <button class="solid" id="stSave" type="button">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Denunciar -->
+<div class="sheet" id="reportSheet" role="dialog" aria-modal="true" aria-labelledby="rpTitle">
+  <div class="card">
+    <h3 id="rpTitle">Denunciar</h3>
+    <p class="body" id="rpWho"></p>
+    <div id="rpOpts"></div>
+    <div class="actions"><button class="ghost" id="rpCancel" type="button">Cancelar</button></div>
+  </div>
+</div>
+
+<!-- Bloqueados -->
+<div class="sheet" id="blockSheet" role="dialog" aria-modal="true" aria-labelledby="blTitle">
+  <div class="card">
+    <h3 id="blTitle">Personas bloqueadas</h3>
+    <div id="blList"></div>
+    <div class="actions"><button class="ghost" id="blClose" type="button">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- Apariencia -->
+<div class="sheet" id="themeSheet" role="dialog" aria-modal="true" aria-labelledby="thTitle">
+  <div class="card">
+    <h3 id="thTitle">Apariencia</h3>
+    <p class="body">Elige cómo se ve Entre Nous en este dispositivo.</p>
+    <div class="theme-opts">
+      <button type="button" data-theme="auto">Automático</button>
+      <button type="button" data-theme="light">Claro</button>
+      <button type="button" data-theme="dark">Oscuro</button>
+    </div>
+    <div class="actions"><button class="ghost" id="thClose" type="button">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- Contraseña -->
+<div class="sheet" id="pwSheet" role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+  <div class="card">
+    <h3 id="pwTitle">Confirma tu contraseña</h3>
+    <p class="body" id="pwBody">Por seguridad, escribe tu contraseña para continuar.</p>
+    <input class="inp" id="pwInput" type="password" autocomplete="current-password">
+    <div class="msg-err" id="pwErr"></div>
+    <div class="actions">
+      <button class="ghost" id="pwCancel" type="button">Cancelar</button>
+      <button class="solid" id="pwOk" type="button">Continuar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Confirmación -->
 <div class="sheet" id="askSheet" role="alertdialog" aria-modal="true" aria-labelledby="askTitle">
   <div class="card">
@@ -385,15 +470,19 @@ label{display:block;font-size:13px;font-weight:600;margin:12px 0 6px}
 <!-- Cuenta -->
 <div class="sheet" id="meSheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
   <div class="card">
-    <div class="menu-row"><div id="meAv"></div><div><h3 id="meTitle"></h3><div class="status" id="meUser"></div></div></div>
+    <div class="menu-row"><div id="meAv"></div><div><h3 id="meTitle"></h3><div class="status" id="meUser"></div><div class="mystatus" id="meStatus"></div></div></div>
     <button class="menu-btn" id="notifBtn" type="button">Activar notificaciones</button>
     <div class="pushnote" id="pushNote" hidden></div>
+    <button class="menu-btn" id="themeBtn" type="button">🌗 Apariencia</button>
+    <button class="menu-btn" id="blockedBtn" type="button">🚫 Personas bloqueadas</button>
+    <button class="menu-btn" id="statusBtn" type="button">✍️ Frase de estado</button>
     <button class="menu-btn" id="photoBtn" type="button">🖼️ Cambiar foto de perfil</button>
     <button class="menu-btn warn" id="photoDel" type="button" hidden>Quitar foto de perfil</button>
     <input type="file" id="photoInput" accept="image/*" hidden>
     <button class="menu-btn" id="soundBtn" type="button">Sonido de mensajes: activado</button>
     <button class="menu-btn" id="copyBtn" type="button">Copiar mi usuario para compartirlo</button>
     <button class="menu-btn danger" id="logoutBtn" type="button">Cerrar sesión</button>
+    <button class="menu-btn warn" id="delAccBtn" type="button">Eliminar mi cuenta</button>
     <div class="actions"><button class="ghost" id="meClose" type="button">Cerrar</button></div>
   </div>
 </div>
@@ -701,14 +790,15 @@ async function startApp(user){
   pendingOpen=new URLSearchParams(location.search).get("chat");
   unsubChats=F.onSnapshot(F.query(F.collection(db,"chats"),F.where("members","array-contains",user.uid)),async snap=>{
     const prev=Object.fromEntries(S.chats.map(c=>[c.id,c.lastAt]));
-    const chats=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.lastAt||0)-(a.lastAt||0));
+    const chats=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>((isPinned(b)?1:0)-(isPinned(a)?1:0))||((b.lastAt||0)-(a.lastAt||0)));
     await loadUsers(chats.flatMap(c=>c.members));
     await Promise.all(chats.map(async c=>{ S.preview[c.id]=await previewOf(c); }));
     S.chats=chats;
     if(S.current&&!chats.some(c=>c.id===S.current)&&!snap.metadata.hasPendingWrites){ closeCurrent(); toast("Esta conversación ya no está disponible."); }
     let full=false, soft=false;
     for(const c of chats){
-      if(c.lastBy&&c.lastBy!==user.uid&&c.lastAt>bootAt&&c.lastAt!==prev[c.id]){
+      if(c.lastBy&&c.lastBy!==user.uid&&c.lastAt>bootAt&&c.lastAt!==prev[c.id]&&!isMuted(c)&&!isBlocked(c.lastBy)){
         const viewing=c.id===S.current&&!document.hidden&&$("#appView").classList.contains("in-chat")||(c.id===S.current&&!document.hidden&&!mobile());
         if(viewing) soft=true; else { full=true; notify(c); }
       }
@@ -752,14 +842,14 @@ function isUnread(c){ const r=(c.reads||{})[S.me.uid]||0; return c.lastBy&&c.las
 function typersOf(c){ const t=c.typing||{}; return Object.keys(t).filter(u=>u!==S.me.uid&&Date.now()-t[u]<6000); }
 function renderList(){
   if(!S.me) return;
-  const unread=S.chats.filter(c=>!isHidden(c)).reduce((a,c)=>a+unreadCount(c),0);
+  const unread=S.chats.filter(c=>!isHidden(c)&&!isMuted(c)&&!isBlockedChat(c)).reduce((a,c)=>a+unreadCount(c),0);
   document.title=unread?`(${unread}) Entre Nous`:"Entre Nous";
   setBadge(unread);
   const ul=$("#list"); ul.replaceChildren();
-  const rows=S.chats.filter(c=>!isHidden(c)).filter(c=>!S.filter||chatTitle(c).toLowerCase().includes(S.filter)||c.members.some(m=>(S.users[m]?.username||"").includes(S.filter)));
+  const rows=S.chats.filter(c=>!isHidden(c)&&!isBlockedChat(c)).filter(c=>!S.filter||chatTitle(c).toLowerCase().includes(S.filter)||c.members.some(m=>(S.users[m]?.username||"").includes(S.filter)));
   if(!rows.length){
     const li=document.createElement("li"); li.className="empty";
-    li.innerHTML=S.chats.filter(c=>!isHidden(c)).length?'<div>Sin resultados.</div>':'<div><strong>Aún no tienes conversaciones</strong>Toca + para escribirle a alguien o crear un grupo.</div>';
+    li.innerHTML=S.chats.filter(c=>!isHidden(c)&&!isBlockedChat(c)).length?'<div>Sin resultados.</div>':'<div><strong>Aún no tienes conversaciones</strong>Toca + para escribirle a alguien o crear un grupo.</div>';
     ul.append(li); return;
   }
   for(const c of rows){
@@ -770,6 +860,8 @@ function renderList(){
     const t=document.createElement("div"); t.className="t";
     const n=document.createElement("div"); n.className="n";
     const nb=document.createElement("b"); nb.textContent=title;
+    if(isPinned(c)){ const pi=document.createElement("span"); pi.className="pinico"; pi.textContent="📌"; pi.setAttribute("aria-label","Fijado"); nb.append(pi); }
+    if(isMuted(c)){ const mi=document.createElement("span"); mi.className="pinico"; mi.textContent="🔕"; mi.setAttribute("aria-label","Silenciado"); nb.append(mi); }
     const tm=document.createElement("span"); tm.className="time"; tm.textContent=c.lastBy?listTime(c.lastAt):"";
     n.append(nb,tm);
     const p=document.createElement("div"); p.className="p";
@@ -777,7 +869,7 @@ function renderList(){
     const pv=S.preview[c.id]||"";
     ps.textContent= typersOf(c).length ? "escribiendo…" : c.lastBy ? ((c.lastBy===S.me.uid?"Tú: ":(c.isGroup?displayName(c.lastBy)+": ":""))+pv) : (c.isGroup?"Grupo creado":"Sin mensajes todavía");
     const uc=unreadCount(c);
-    p.append(ps); if(uc){ const d=document.createElement("span"); d.className="badge num"; d.textContent=uc>99?"99+":String(uc); d.setAttribute("aria-label",uc+" sin leer"); p.append(d); }
+    p.append(ps); if(uc){ const d=document.createElement("span"); d.className="badge num"+(isMuted(c)?" mute":""); d.textContent=uc>99?"99+":String(uc); d.setAttribute("aria-label",uc+" sin leer"); p.append(d); }
     t.append(n,p); b.append(t); b.onclick=()=>openChat(c.id);
     li.append(b); ul.append(li);
   }
@@ -800,8 +892,17 @@ function openChat(id){
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <div id="hAv"></div>
       <div class="titlewrap"><h2 id="hTitle"></h2><div class="status" id="hStatus">&nbsp;</div></div>
+      <button class="iconbtn" id="findBtn" type="button" aria-label="Buscar en la conversación">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
       <button class="iconbtn" id="optBtn" type="button" aria-label="Opciones de la conversación">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg></button>
+    </div>
+    <div class="searchbar" id="searchBar" hidden>
+      <input id="findInput" placeholder="Buscar en esta conversación" aria-label="Buscar en esta conversación">
+      <span class="hits" id="findHits"></span>
+      <button class="iconbtn" id="findPrev" type="button" aria-label="Anterior">↑</button>
+      <button class="iconbtn" id="findNext" type="button" aria-label="Siguiente">↓</button>
+      <button class="iconbtn" id="findX" type="button" aria-label="Cerrar búsqueda">✕</button>
     </div>
     <div class="msgs" id="msgs" aria-live="polite"></div>
     <div class="emoji-panel" id="emojiPanel" hidden>
@@ -833,6 +934,12 @@ function openChat(id){
   inp.addEventListener("focus",()=>{ if(mobile()) toggleEmoji(false); });
   $("#sendBtn").onclick=send;
   $("#optBtn").onclick=openChatOptions;
+  $("#findBtn").onclick=()=>toggleFind(true);
+  $("#findX").onclick=()=>toggleFind(false);
+  $("#findInput").addEventListener("input",runFind);
+  $("#findInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); stepFind(e.shiftKey?-1:1); } if(e.key==="Escape") toggleFind(false); });
+  $("#findNext").onclick=()=>stepFind(1); $("#findPrev").onclick=()=>stepFind(-1);
+  findHits=[]; findAt=-1;
   $("#rbX").onclick=()=>{ if(editing) setEdit(null); else setReply(null); };
   replyTo=null; editing=null; pendingFile=null;
   $("#attachBtn").onclick=()=>$("#fileInput").click();
@@ -872,7 +979,7 @@ async function refreshMsgs(){
   }));
   if(id!==S.current) return;
   const cut=hiddenAt(c), gone=new Set((c.hm||{})[S.me.uid]||[]);
-  S.msgs=out.filter(m=>(!cut||m.at>cut)&&!gone.has(m.id));
+  S.msgs=out.filter(m=>(!cut||m.at>cut)&&!gone.has(m.id)&&!(m.by!==S.me.uid&&isBlocked(m.by)));
   await loadUsers(S.msgs.map(m=>m.by));
   renderMsgs();
 }
@@ -887,8 +994,11 @@ function renderHeader(){
   if(typers.length){ st.classList.add("live"); st.textContent=c.isGroup?typers.map(displayName).join(", ")+" escribiendo…":"escribiendo…"; }
   else if(c.isGroup){ st.textContent=c.members.length+" integrantes: "+c.members.map(m=>m===S.me.uid?"tú":displayName(m)).join(", "); }
   else if(o===S.me.uid){ st.textContent="Notas para ti"; }
-  else { const u=S.users[o]; if(isOnline(u)){ st.classList.add("live"); st.textContent="en línea"; }
-    else st.textContent=u&&u.lastSeen?("visto "+(new Date(u.lastSeen).toDateString()===new Date().toDateString()?"hoy a las "+hhmm(u.lastSeen):listTime(u.lastSeen))):"@"+(u?.username||""); }
+  else { const u=S.users[o];
+    let base;
+    if(isOnline(u)){ st.classList.add("live"); base="en línea"; }
+    else base=u&&u.lastSeen?("visto "+(new Date(u.lastSeen).toDateString()===new Date().toDateString()?"hoy a las "+hhmm(u.lastSeen):listTime(u.lastSeen))):"@"+(u?.username||"");
+    st.textContent=u&&u.status?base+" · "+u.status:base; }
 }
 let scrollJump=false;
 function renderMsgs(){
@@ -1190,6 +1300,198 @@ $("#vShare").onclick=async()=>{
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&$("#viewer").classList.contains("open")) closeViewer(); });
 
 /* ============================================================
+   BUSCAR DENTRO DE LA CONVERSACIÓN
+   ============================================================ */
+let findHits=[], findAt=-1;
+function toggleFind(on){
+  const bar=$("#searchBar"); if(!bar) return;
+  bar.hidden=!on;
+  if(on){ $("#findInput").value=""; $("#findHits").textContent=""; findHits=[]; findAt=-1; setTimeout(()=>$("#findInput").focus(),40); }
+  else { findHits=[]; findAt=-1; document.querySelectorAll("#msgs .row.hit").forEach(r=>r.classList.remove("hit")); }
+}
+function runFind(){
+  const q=$("#findInput").value.trim().toLowerCase();
+  document.querySelectorAll("#msgs .row.hit").forEach(r=>r.classList.remove("hit"));
+  if(!q){ findHits=[]; findAt=-1; $("#findHits").textContent=""; return; }
+  findHits=S.msgs.filter(m=>!m.sys&&!m.del&&!m.locked&&displayText(m).toLowerCase().includes(q)).map(m=>m.id);
+  findAt=findHits.length?findHits.length-1:-1;
+  $("#findHits").textContent=findHits.length?(findAt+1)+" de "+findHits.length:"sin resultados";
+  if(findHits.length) markHit();
+}
+function stepFind(d){
+  if(!findHits.length) return;
+  findAt=(findAt+d+findHits.length)%findHits.length;
+  $("#findHits").textContent=(findAt+1)+" de "+findHits.length;
+  markHit();
+}
+function markHit(){
+  document.querySelectorAll("#msgs .row.hit").forEach(r=>r.classList.remove("hit"));
+  const el=[...document.querySelectorAll("#msgs .row")].find(r=>r.dataset.id===findHits[findAt]);
+  if(el){ el.classList.add("hit"); el.scrollIntoView({behavior:"smooth",block:"center"}); }
+  else toast("Ese mensaje es más antiguo de lo que la app tiene cargado.");
+}
+
+/* ============================================================
+   FIJAR, SILENCIAR, BLOQUEAR Y DENUNCIAR
+   ============================================================ */
+const isPinned=c=>!!(c.pin||{})[S.me.uid];
+const isMuted=c=>!!(c.mute||{})[S.me.uid];
+const isBlocked=uid=>Array.isArray(S.profile&&S.profile.bl)&&S.profile.bl.includes(uid);
+function isBlockedChat(c){ const o=otherOf(c); return !c.isGroup&&o&&o!==S.me.uid&&isBlocked(o); }
+async function togglePin(c){
+  try{ await F.updateDoc(F.doc(db,"chats",c.id),{[`pin.${S.me.uid}`]:isPinned(c)?F.deleteField():true}); }
+  catch(e){ toast("No se pudo cambiar ("+(e.code||"error")+")."); }
+}
+async function toggleMute(c){
+  try{ await F.updateDoc(F.doc(db,"chats",c.id),{[`mute.${S.me.uid}`]:isMuted(c)?F.deleteField():true});
+    toast(isMuted(c)?"Chat con notificaciones activas.":"Chat silenciado."); }
+  catch(e){ toast("No se pudo cambiar ("+(e.code||"error")+")."); }
+}
+async function toggleBlock(uid){
+  const blocked=isBlocked(uid);
+  if(!blocked&&!await ask("¿Bloquear a "+displayName(uid)+"?","No verás sus mensajes ni sus chats, y dejarás de recibir sus notificaciones. La persona no recibe ningún aviso de esto.","Bloquear")) return;
+  try{
+    await F.updateDoc(F.doc(db,"users",S.me.uid),{bl:blocked?F.arrayRemove(uid):F.arrayUnion(uid)});
+    S.profile.bl=blocked?(S.profile.bl||[]).filter(x=>x!==uid):[...(S.profile.bl||[]),uid];
+    S.users[S.me.uid]=S.profile;
+    if(blocked) toast("Persona desbloqueada.");
+    else { toast("Persona bloqueada."); if(S.current&&isBlockedChat(S.chats.find(x=>x.id===S.current)||{})) closeCurrent(); }
+    renderList();
+  }catch(e){ toast("No se pudo ("+(e.code||"error")+"). Revisa que las reglas nuevas estén publicadas."); }
+}
+$("#blockedBtn").onclick=()=>{
+  $("#meSheet").classList.remove("open");
+  const list=$("#blList"); list.replaceChildren();
+  const bl=(S.profile.bl||[]);
+  if(!bl.length){ const p=document.createElement("p"); p.className="body"; p.textContent="No has bloqueado a nadie."; list.append(p); }
+  loadUsers(bl).then(()=>{
+    list.replaceChildren();
+    if(!bl.length){ const p=document.createElement("p"); p.className="body"; p.textContent="No has bloqueado a nadie."; list.append(p); return; }
+    for(const u of bl){
+      const row=document.createElement("div"); row.className="blocked-row";
+      row.append(avatarEl(displayName(u),S.users[u]?.username||u,{small:true,photo:S.users[u]?.photo}));
+      const b=document.createElement("b"); b.textContent=displayName(u);
+      const btn=document.createElement("button"); btn.type="button"; btn.textContent="Desbloquear";
+      btn.onclick=async()=>{ await toggleBlock(u); $("#blockedBtn").onclick(); };
+      row.append(b,btn); list.append(row);
+    }
+  });
+  $("#blockSheet").classList.add("open");
+};
+$("#blClose").onclick=()=>$("#blockSheet").classList.remove("open");
+const REASONS=["Mensajes no deseados o spam","Acoso o amenazas","Contenido ilegal","Suplantación de identidad","Otro motivo"];
+function openReport(uid,chatId){
+  $("#rpWho").textContent=uid?("Vas a denunciar a "+displayName(uid)+". Cuéntanos el motivo."):"Vas a denunciar este grupo. Cuéntanos el motivo.";
+  const opts=$("#rpOpts"); opts.replaceChildren();
+  for(const r of REASONS){
+    const b=document.createElement("button"); b.type="button"; b.className="menu-btn"; b.textContent=r;
+    b.onclick=()=>sendReport(uid,chatId,r);
+    opts.append(b);
+  }
+  $("#reportSheet").classList.add("open");
+}
+$("#rpCancel").onclick=()=>$("#reportSheet").classList.remove("open");
+async function sendReport(uid,chatId,reason){
+  $("#reportSheet").classList.remove("open");
+  try{
+    await F.addDoc(F.collection(db,"reports"),{by:S.me.uid,about:uid||null,chatId,reason,at:F.serverTimestamp()});
+    toast("Denuncia enviada. La revisaremos.");
+    if(uid&&!isBlocked(uid)&&await ask("¿Bloquear también?","Puedes bloquear a esta persona para dejar de ver sus mensajes.","Bloquear")) toggleBlock(uid);
+  }catch(e){ toast("No se pudo enviar la denuncia ("+(e.code||"error")+")."); }
+}
+
+/* ============================================================
+   APARIENCIA
+   ============================================================ */
+function applyTheme(t){
+  const r=document.documentElement;
+  if(t==="light"||t==="dark") r.dataset.theme=t; else delete r.dataset.theme;
+  const dark=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);
+  const mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.content=dark?"#0E1320":"#1F3263";
+}
+const getTheme=()=>{ try{ return localStorage.getItem("en_theme")||"auto"; }catch(e){ return "auto"; } };
+applyTheme(getTheme());
+$("#themeBtn").onclick=()=>{
+  $("#meSheet").classList.remove("open");
+  const cur=getTheme();
+  document.querySelectorAll("#themeSheet .theme-opts button").forEach(b=>{
+    b.setAttribute("aria-pressed",String(b.dataset.theme===cur));
+    b.onclick=()=>{ try{ localStorage.setItem("en_theme",b.dataset.theme); }catch(e){} applyTheme(b.dataset.theme);
+      document.querySelectorAll("#themeSheet .theme-opts button").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); };
+  });
+  $("#themeSheet").classList.add("open");
+};
+$("#thClose").onclick=()=>$("#themeSheet").classList.remove("open");
+
+/* ============================================================
+   ELIMINAR MI CUENTA
+   ============================================================ */
+function askPassword(text){
+  return new Promise(res=>{
+    $("#pwBody").textContent=text; $("#pwInput").value=""; $("#pwErr").textContent="";
+    const sh=$("#pwSheet"); sh.classList.add("open"); setTimeout(()=>$("#pwInput").focus(),60);
+    const done=v=>{ sh.classList.remove("open"); $("#pwOk").onclick=$("#pwCancel").onclick=null; res(v); };
+    $("#pwOk").onclick=()=>done($("#pwInput").value); $("#pwCancel").onclick=()=>done(null);
+  });
+}
+$("#delAccBtn").onclick=async()=>{
+  $("#meSheet").classList.remove("open");
+  if(!await ask("¿Eliminar tu cuenta?","Se borrarán tu perfil, tu usuario @"+S.profile.username+" y tus llaves de cifrado. Saldrás de todos los grupos y ya no podrás leer tus conversaciones. Esto no se puede deshacer.","Eliminar cuenta")) return;
+  const pw=await askPassword("Escribe tu contraseña para confirmar que eres tú.");
+  if(!pw) return;
+  try{
+    const cred=A.EmailAuthProvider.credential(S.me.email,pw);
+    await A.reauthenticateWithCredential(auth,cred);
+  }catch(e){ toast(e.code==="auth/invalid-credential"||e.code==="auth/wrong-password"?"Contraseña incorrecta.":"No se pudo confirmar ("+(e.code||"error")+")."); return; }
+  toast("Eliminando tu cuenta…");
+  try{
+    for(const c of S.chats){
+      try{
+        if(c.isGroup) await F.updateDoc(F.doc(db,"chats",c.id),{members:F.arrayRemove(S.me.uid),[`keys.${S.me.uid}`]:F.deleteField()});
+        else await F.updateDoc(F.doc(db,"chats",c.id),{[`hid.${S.me.uid}`]:Date.now(),[`keys.${S.me.uid}`]:F.deleteField()});
+      }catch(e){}
+    }
+    await removePushToken();
+    const uname=S.profile.username;
+    await F.deleteDoc(F.doc(db,"vault",S.me.uid)).catch(()=>{});
+    await F.deleteDoc(F.doc(db,"push",S.me.uid)).catch(()=>{});
+    await F.deleteDoc(F.doc(db,"usernames",uname)).catch(()=>{});
+    await F.deleteDoc(F.doc(db,"users",S.me.uid)).catch(()=>{});
+    await idbDel("k_"+S.me.uid);
+    await A.deleteUser(auth.currentUser);
+    pendingAuthMsg="Tu cuenta fue eliminada.";
+  }catch(e){ toast("No se pudo completar ("+(e.code||"error")+")."); }
+};
+
+/* ============================================================
+   FRASE DE ESTADO
+   ============================================================ */
+const SUG=["Disponible","En audiencia","En diligencia","Ocupado, escribe y respondo","Solo mensajes","De vacaciones"];
+$("#statusBtn").onclick=()=>{
+  $("#meSheet").classList.remove("open");
+  const i=$("#stInput"); i.value=S.profile.status||""; updateStCount();
+  $("#stDel").hidden=!S.profile.status;
+  const sug=$("#stSug"); sug.replaceChildren();
+  for(const t of SUG){ const b=document.createElement("button"); b.type="button"; b.textContent=t; b.onclick=()=>{ i.value=t; updateStCount(); i.focus(); }; sug.append(b); }
+  $("#statusSheet").classList.add("open"); setTimeout(()=>i.focus(),60);
+};
+function updateStCount(){ $("#stCount").textContent=$("#stInput").value.length+"/80"; }
+$("#stInput").addEventListener("input",updateStCount);
+$("#stInput").addEventListener("keydown",e=>{ if(e.key==="Enter") $("#stSave").click(); });
+$("#stCancel").onclick=()=>$("#statusSheet").classList.remove("open");
+async function saveStatus(text){
+  try{
+    await F.updateDoc(F.doc(db,"users",S.me.uid),text?{status:text}:{status:F.deleteField()});
+    if(text) S.profile.status=text; else delete S.profile.status;
+    S.users[S.me.uid]=S.profile;
+    $("#statusSheet").classList.remove("open");
+    toast(text?"Frase de estado actualizada.":"Frase de estado quitada.");
+  }catch(e){ toast("No se pudo guardar ("+(e.code||"error")+")."); }
+}
+$("#stSave").onclick=()=>saveStatus($("#stInput").value.trim().slice(0,80));
+$("#stDel").onclick=()=>saveStatus("");
+
+/* ============================================================
    FOTO DE PERFIL
    ============================================================ */
 function renderMeBtn(){ if(S.profile) $("#meBtn").replaceChildren(avatarEl(S.profile.name||S.profile.username,S.profile.username,{small:true,photo:S.profile.photo})); }
@@ -1475,6 +1777,15 @@ function openChatOptions(){
     p.textContent="Integrantes: "+c.members.map(m=>m===S.me.uid?"tú":displayName(m)).join(", ");
     body.append(p);
   }
+  add((isPinned(c)?"📌  Quitar de fijados":"📌  Fijar arriba"),()=>togglePin(c));
+  add((isMuted(c)?"🔔  Activar notificaciones":"🔕  Silenciar este chat"),()=>toggleMute(c));
+  const other=otherOf(c);
+  if(!c.isGroup&&other&&other!==S.me.uid){
+    add(isBlocked(other)?"✅  Desbloquear a "+displayName(other):"🚫  Bloquear a "+displayName(other),()=>toggleBlock(other),!isBlocked(other));
+    add("⚠️  Denunciar a "+displayName(other),()=>openReport(other,c.id),true);
+  } else if(c.isGroup){
+    add("⚠️  Denunciar este grupo",()=>openReport(null,c.id),true);
+  }
   add("Eliminar chat (solo para mí)",hideChat,true);
   if(c.isGroup){
     add("Salir del grupo",leaveGroup,true);
@@ -1527,6 +1838,7 @@ const soundLabel=()=>"Sonido de mensajes: "+(soundOn()?"activado":"desactivado")
 $("#meBtn").onclick=()=>{
   $("#meAv").replaceChildren(avatarEl(S.profile.name||S.profile.username,S.profile.username,{photo:S.profile.photo}));
   $("#photoDel").hidden=!S.profile.photo;
+  $("#meStatus").textContent=S.profile.status||"";
   $("#meTitle").textContent=S.profile.name||"@"+S.profile.username; $("#meUser").textContent="@"+S.profile.username;
   refreshPushUI();
   $("#soundBtn").textContent=soundLabel();
@@ -1537,7 +1849,7 @@ $("#meClose").onclick=()=>$("#meSheet").classList.remove("open");
 $("#logoutBtn").onclick=async()=>{ $("#meSheet").classList.remove("open"); await removePushToken(); if(S.me) await idbDel("k_"+S.me.uid); await A.signOut(auth); };
 $("#copyBtn").onclick=async()=>{ try{ await navigator.clipboard.writeText("@"+S.profile.username); toast("Usuario copiado."); }catch(e){ toast("@"+S.profile.username); } };
 
-["#newSheet","#meSheet","#chatSheet","#msgSheet"].forEach(s=>$(s).addEventListener("click",e=>{ if(e.target===$(s)) $(s).classList.remove("open"); }));
+["#newSheet","#meSheet","#chatSheet","#msgSheet","#statusSheet","#reportSheet","#blockSheet","#themeSheet"].forEach(s=>$(s).addEventListener("click",e=>{ if(e.target===$(s)) $(s).classList.remove("open"); }));
 function notify(c){
   if(!("Notification" in window)||Notification.permission!=="granted") return;
   const title=chatTitle(c), opts={body:(c.isGroup?displayName(c.lastBy)+": ":"")+(S.preview[c.id]||"Mensaje nuevo"),tag:c.id,icon:"icon-192.png",data:{chatId:c.id}};
